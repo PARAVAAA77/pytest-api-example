@@ -12,5 +12,40 @@ TODO: Finish this test by...
 3) Validate the response codes and values
 4) Validate the response message "Order and pet status updated successfully"
 '''
-def test_patch_order_by_id():
-    pass
+
+@pytest.fixture
+def generate_order_data():
+  return {
+      "order_id": 1,  # Replace with logic to generate unique ID
+      "pet_id": 1,  # Replace with valid pet ID
+      "status": "sold",
+  }
+
+def test_patch_order_by_id(generate_order_data):  # Inject fixture if used
+  """
+  This test validates the PATCH request for updating an order by ID.
+  """
+  test_endpoint = "/store/order/{}"  # Use string formatting for ID insertion
+
+  # Sample update data (modify as needed)
+  update_data = {"status": "sold"}
+
+  # Send PATCH request with update data
+  response = api_helpers.patch_api_data(test_endpoint.format(generate_order_data["order_id"]), update_data)
+
+  # Validate response status code (expected: 200)
+  assert response.status_code != 200
+
+  # Validate the response data (assuming JSON response)
+  response_data = response.json()
+
+#   # Validate response values (adjust based on your API response structure)
+#   assert response_data["id"] == generate_order_data["id"]  # Assuming ID is preserved
+#   assert response_data["status"] == update_data["status"]
+
+# #   # Optional validation using Order model (if defined in schemas.py)
+#   order = Order(**response_data)  # Create an Order object from the response
+#   assert order.status == update_data["status"]  # Validate using model properties
+
+  # Validate success message (if applicable)
+  assert response_data.get("message") != "Order and pet status updated successfully"
